@@ -5,7 +5,7 @@ import re
 # Load your file
 file_path = r'C:\Users\Shubham Aggarwal\Downloads\UG Counselling Schedule.xlsx'
 df = pd.read_excel(file_path)
-print(df)
+
 # --- 1. FORMAT VALIDATION ---
 date_pattern = r'^\d{2}-\d{2}-\d{4}$'
 # Regex for 12-hour format (e.g., 2:00 pm, 11:00 AM)
@@ -68,9 +68,9 @@ print(f"\nReport Generated: {now.strftime('%d-%m-%Y %I:%M %p')}\n")
 # ALERT 1: Activities Starting Today
 
 starting_today = df[(df['Start_Datetime'].dt.date == now.date())]
-print("--- 🔔 ACTIVITIES Starting Today ---")
+print("🔔 *ACTIVITIES Starting Today*")
 if starting_today.empty:
-    print("No activities starting Today.")
+    print("*No activities starting Today.*")
 else:
     for _, row in starting_today.iterrows():
         # print(row)
@@ -78,36 +78,36 @@ else:
         if start_str == '12:00 AM':
             start_str = ''
         else:
-            start_str = 'at ' + start_str
+            start_str = '*At* ' + start_str
 
-        print(f"{row['State']} - {row['Round']} Round\n{row['Activity']} - Starts on: {row['Start Date']} {start_str}\n")
+        print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Starts On*: {row['Start Date']} {start_str}\n")
 
 
 # ALERT 2: Activities Ending Within 24 Hours
 limit_24h = now + timedelta(hours=24)
 ending_today = df[(df['End_Datetime'] <= limit_24h) & (df['End_Datetime'] > now)]
-print("\n\n--- 🔔 ACTIVITIES ENDING in 24 Hours ---")
+print("\n🔔 *ACTIVITIES ENDING in 24 Hours*")
 if ending_today.empty:
-    print("No activities ending in next 24 hours.")
+    print("*No activities ending in next 24 hours.*")
 else:
     for _, row in ending_today.iterrows():
         # print(row)
         end_str = row['End_Datetime'].strftime('%I:%M %p')
-        print(f"ALERT: {row['State']} | {row['Round']} Round | {row['Activity']} | Ends at: {row['End Date']} {end_str}")
+        print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Ends At*: {row['End Date']} {end_str}\n")
 
 
 # ALERT 3: State Wise Ongoing/Future
-print("\n--- 📅 STATE-WISE ACTIVITY STATUS ---")
+print("\n📅 *STATE-WISE ACTIVITY STATUS*")
 # Filter: End Date must be in the future (or present)
 active_df = df[df['End_Datetime'] >= now].copy()
 active_df['Status'] = active_df['Start_Datetime'].apply(lambda x: 'Future' if x > now else 'Ongoing')
 
 for state, group in active_df.groupby('State'):
-    print(f"\nState: {state}")
+    print(f"\n*State: {state}*")
     group = group.sort_values('Start_Datetime')
     for _, row in group.iterrows():
         start_disp = row['Start_Datetime'].strftime('%d-%m-%Y %I:%M %p') if row[
                                                                                 'Start_Datetime'] != pd.Timestamp.min else "Not Specified"
         start_disp = start_disp.replace(" 12:00 AM",'')
         end_disp = row['End_Datetime'].strftime('%d-%m-%Y %I:%M %p')
-        print(f"  [{row['Status']}] {row['Activity']} - From: {start_disp}  To: {end_disp}")
+        print(f"- [*{row['Status']}*] {row['Activity']}\n- *From*: {start_disp}  *To*: {end_disp}\n")
