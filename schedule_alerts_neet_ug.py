@@ -15,6 +15,7 @@ def send_telegram(grp, token_str, msg):
 
 # Load your file
 file_path = r'H:\My Drive\Business\Vidya Saarthi\Shared Data\UG Counselling Schedule.xlsx'
+area = 'Medical UG'
 df = pd.read_excel(file_path)
 
 # --- 1. FORMAT VALIDATION ---
@@ -88,14 +89,14 @@ today_date = now.date()
 # ALERT 1: State Wise Ongoing/Future
 message = ''
 # print("\n\n📅 *STATE-WISE ACTIVITY STATUS*")
-message = message + "\n\n\n📅 *STATE-WISE ACTIVITY STATUS - NEET UG*\n"
+message = message + "\n\n\n📅 *STATE-WISE ACTIVITY STATUS - {0}*\n".format(area)
 # Filter: End Date must be in the future (or present)
 active_df = df[df['End_Datetime'] >= now].copy()
 active_df['Status'] = active_df['Start_Datetime'].apply(lambda x: 'Future' if x > now else 'Ongoing')
 
 for state, group in active_df.groupby('State'):
     # print(f"\n*State: {state}*")
-    message = message + f"\n*State: {state}*\n"
+    message = message + f"\n📍 *State: {state}*\n\n"
     group = group.sort_values('Start_Datetime')
     for _, row in group.iterrows():
         start_disp = row['Start_Datetime'].strftime('%d-%m-%Y %I:%M %p') if row[
@@ -103,7 +104,11 @@ for state, group in active_df.groupby('State'):
         start_disp = start_disp.replace(" 12:00 AM",'')
         end_disp = row['End_Datetime'].strftime('%d-%m-%Y %I:%M %p')
         # print(f"- [*{row['Status']}*] {row['Activity']}\n- *From*: {start_disp}  *To*: {end_disp}\n")
-        message = message + f"- \[*{row['Status']}*] {row['Activity']}\n- *From*: {start_disp}  *To*: {end_disp}\n\n"
+
+        if row['Status'] == 'Future':
+            message = message + f"🟡 *[{row['Status']}]* {row['Activity']}\n⏰ {start_disp}  ➡️ {end_disp}\n\n"
+        elif row['Status'] == 'Ongoing':
+            message = message + f"🟢 *[{row['Status']}]* {row['Activity']}\n⏰ {start_disp}  ➡️ {end_disp}\n\n"
 
 
 # print(message)
@@ -114,7 +119,7 @@ send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', m
 message = ''
 starting_today = df[(df['Start_Datetime'].dt.date == now.date())]
 # print("🔔 *ACTIVITIES Starting Today*")
-message = message + "🔔 *ACTIVITIES Starting Today - NEET UG*\n\n"
+message = message + "🔔 *ACTIVITIES Starting Today - {0}*\n\n".format(area)
 
 if starting_today.empty:
     # print("*No activities starting Today.*")
@@ -129,7 +134,7 @@ else:
             start_str = '*At* ' + start_str
 
         # print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Starts On*: {row['Start Date']} {start_str}\n")
-        message = message + f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Starts On*: {row['Start Date']} {start_str}\n\n"
+        message = message + f"📍 *State - {row['State']} - {row['Round']} Round*\n📢 *Activity* - {row['Activity']}\n✅ *Starts On*: {row['Start Date']} {start_str}\n\n"
 
 send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
 
@@ -167,7 +172,7 @@ while 1:
     limit_24h = now + timedelta(hours=24)
     ending_today = df[(df['End_Datetime'] <= limit_24h) & (df['End_Datetime'] > now)]
     # print("\n\n🔔 *ACTIVITIES ENDING in 24 Hours*")
-    message = message + "\n\n🔔 *ACTIVITIES ENDING in Next 24 Hours - NEET UG*\n\n"
+    message = message + "\n\n🔔 *ACTIVITIES ENDING in Next 24 Hours - {0}*\n\n".format(area)
 
     if ending_today.empty:
 
@@ -178,7 +183,7 @@ while 1:
             # print(row)
             end_str = row['End_Datetime'].strftime('%I:%M %p')
             # print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Ends At*: {row['End Date']} {end_str}\n")
-            message = message + f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Ends At*: {row['End Date']} {end_str}\n\n"
+            message = message + f"📍 *State - {row['State']} - {row['Round']} Round*\n📢 *Activity* - {row['Activity']}\n🛑 *Ends At*: {row['End Date']} {end_str}\n\n"
 
     send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
     time.sleep(3600)
