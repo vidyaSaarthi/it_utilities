@@ -14,7 +14,7 @@ def send_telegram(grp, token_str, msg):
         pass
 
 # Load your file
-file_path = r'C:\Users\Shubham Aggarwal\Downloads\UG Counselling Schedule.xlsx'
+file_path = r'H:\My Drive\Business\Vidya Saarthi\Shared Data\PG Counselling Schedule.xlsx'
 df = pd.read_excel(file_path)
 
 # --- 1. FORMAT VALIDATION ---
@@ -30,9 +30,17 @@ def check_format(series, pattern):
     return valid_items.str.match(pattern).all()
 
 
-print(f"Format Check - Date (DD-MM-YYYY): {'Passed' if check_format(df['Start Date'], date_pattern) else 'Failed'}")
-print(
-    f"Format Check - Time : {'Passed' if check_format(df['Start Time'], time_pattern_24h) else 'Failed (Using flexible parser)'}")
+# print(f"Format Check - Date (DD-MM-YYYY): {'Passed' if check_format(df['Start Date'], date_pattern) else 'Failed'}")
+# print(
+#     f"Format Check - Time : {'Passed' if check_format(df['Start Time'], time_pattern_24h) else 'Failed (Using flexible parser)'}")
+
+if not check_format(df['Start Date'], date_pattern):
+    send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', "Activity Status Failure - Date Format not correct")
+
+if not check_format(df['Start Time'], time_pattern_24h):
+    send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', "Activity Status Failure - Time Format not correct")
+
+
 
 # --- 2. DATA PREPARATION ---
 # Fill Missing Times with defaults
@@ -80,7 +88,7 @@ today_date = now.date()
 # ALERT 1: State Wise Ongoing/Future
 message = ''
 # print("\n\n📅 *STATE-WISE ACTIVITY STATUS*")
-message = message + "\n\n\n📅 *STATE-WISE ACTIVITY STATUS*\n"
+message = message + "\n\n\n📅 *STATE-WISE ACTIVITY STATUS - Medical PG*\n"
 # Filter: End Date must be in the future (or present)
 active_df = df[df['End_Datetime'] >= now].copy()
 active_df['Status'] = active_df['Start_Datetime'].apply(lambda x: 'Future' if x > now else 'Ongoing')
@@ -95,7 +103,7 @@ for state, group in active_df.groupby('State'):
         start_disp = start_disp.replace(" 12:00 AM",'')
         end_disp = row['End_Datetime'].strftime('%d-%m-%Y %I:%M %p')
         # print(f"- [*{row['Status']}*] {row['Activity']}\n- *From*: {start_disp}  *To*: {end_disp}\n")
-        message = message + f"- \[*{row['Status']}*] {row['Activity']}\n- *From*: {start_disp}  *To*: {end_disp}\n\n"
+        message = message + f"- *[{row['Status']}]* {row['Activity']}\n- *From*: {start_disp}  ➡️ *To*: {end_disp}\n\n"
 
 
 # print(message)
@@ -106,7 +114,7 @@ send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', m
 message = ''
 starting_today = df[(df['Start_Datetime'].dt.date == now.date())]
 # print("🔔 *ACTIVITIES Starting Today*")
-message = message + "🔔 *ACTIVITIES Starting Today*\n\n"
+message = message + "🔔 *ACTIVITIES Starting Today - Medical PG*\n\n"
 
 if starting_today.empty:
     # print("*No activities starting Today.*")
@@ -121,7 +129,7 @@ else:
             start_str = '*At* ' + start_str
 
         # print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Starts On*: {row['Start Date']} {start_str}\n")
-        message = message + f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Starts On*: {row['Start Date']} {start_str}\n"
+        message = message + f"🏛️*State - {row['State']} - {row['Round']} Round*\n📢 *Activity* - {row['Activity']}\n✅ *Starts On*: {row['Start Date']} {start_str}\n\n"
 
 send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
 
@@ -134,9 +142,13 @@ while 1:
     time_pattern_12h = r'^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM|am|pm)$'
     time_pattern_24h = r'^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$'
 
-    print(f"Format Check - Date (DD-MM-YYYY): {'Passed' if check_format(df['Start Date'], date_pattern) else 'Failed'}")
-    print(
-        f"Format Check - Time : {'Passed' if check_format(df['Start Time'], time_pattern_24h) else 'Failed (Using flexible parser)'}")
+    if not check_format(df['Start Date'], date_pattern):
+        send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14',
+                      "Activity Status Failure - Date Format not correct")
+
+    if not check_format(df['Start Time'], time_pattern_24h):
+        send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14',
+                      "Activity Status Failure - Time Format not correct")
 
     # --- 2. DATA PREPARATION ---
     # Fill Missing Times with defaults
@@ -155,7 +167,7 @@ while 1:
     limit_24h = now + timedelta(hours=24)
     ending_today = df[(df['End_Datetime'] <= limit_24h) & (df['End_Datetime'] > now)]
     # print("\n\n🔔 *ACTIVITIES ENDING in 24 Hours*")
-    message = message + "\n\n🔔 *ACTIVITIES ENDING in Next 24 Hours*\n\n"
+    message = message + "\n\n🔔 *ACTIVITIES ENDING in Next 24 Hours - Medical PG*\n\n"
 
     if ending_today.empty:
 
@@ -166,7 +178,7 @@ while 1:
             # print(row)
             end_str = row['End_Datetime'].strftime('%I:%M %p')
             # print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Ends At*: {row['End Date']} {end_str}\n")
-            message = message + f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Ends At*: {row['End Date']} {end_str}\n"
+            message = message + f"📍 *State - {row['State']} - {row['Round']} Round*\n📢 *Activity* - {row['Activity']}\n🛑 *Ends At*: {row['End Date']} {end_str}\n\n"
 
     send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
     time.sleep(3600)
