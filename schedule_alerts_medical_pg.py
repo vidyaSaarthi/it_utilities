@@ -9,6 +9,7 @@ def send_telegram(grp, token_str, msg):
         telegram_msg = msg
         telegram_group_id = grp
         bot = telegram.Bot(token=token_str)
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         asyncio.run(bot.send_message(chat_id=telegram_group_id, text=telegram_msg, parse_mode=ParseMode.MARKDOWN))
     except:
         pass
@@ -111,9 +112,12 @@ for state, group in active_df.groupby('State'):
             message = message + f"🟢 *[{row['Status']}]* {row['Activity']}\n⏰ {start_disp}  ➡️ {end_disp}\n\n"
 
 
-# print(message)
+print(message)
 
-send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
+try:
+    send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
+except:
+    pass
 
 # ALERT 2: Activities Starting Today
 message = ''
@@ -136,7 +140,12 @@ else:
         # print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Starts On*: {row['Start Date']} {start_str}\n")
         message = message + f"📍 *State - {row['State']} - {row['Round']} Round*\n📢 *Activity* - {row['Activity']}\n✅ *Starts On*: {row['Start Date']} {start_str}\n\n"
 
-send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
+try:
+    send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
+except:
+    pass
+
+print(message)
 
 while 1:
     df = pd.read_excel(file_path)
@@ -185,6 +194,11 @@ while 1:
             # print(f"- *State - {row['State']} - {row['Round']} Round*\n- *Activity* - {row['Activity']}\n- *Ends At*: {row['End Date']} {end_str}\n")
             message = message + f"📍 *State - {row['State']} - {row['Round']} Round*\n📢 *Activity* - {row['Activity']}\n🛑 *Ends At*: {row['End Date']} {end_str}\n\n"
 
-    send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
+    try:
+        send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', message)
+    except:
+        pass
+    print(message)
     time.sleep(3600)
     del df
+
