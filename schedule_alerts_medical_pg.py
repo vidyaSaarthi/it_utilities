@@ -199,6 +199,6 @@ while 1:
     except:
         pass
     print(message)
-    time.sleep(3600)
+    time.sleep(21600)
     del df
 
