@@ -28,6 +28,7 @@ time_pattern_24h = r'^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$'
 
 def check_format(series, pattern):
     valid_items = series.dropna().astype(str)
+    print(valid_items)
     if len(valid_items) == 0: return True
     return valid_items.str.match(pattern).all()
 
@@ -37,6 +38,9 @@ def check_format(series, pattern):
 #     f"Format Check - Time : {'Passed' if check_format(df['Start Time'], time_pattern_24h) else 'Failed (Using flexible parser)'}")
 
 if not check_format(df['Start Date'], date_pattern):
+    send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', "Activity Status Failure - Date Format not correct")
+
+if not check_format(df['End Date'], date_pattern):
     send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', "Activity Status Failure - Date Format not correct")
 
 if not check_format(df['Start Time'], time_pattern_24h):

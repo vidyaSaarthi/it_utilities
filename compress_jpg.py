@@ -7,6 +7,7 @@ def compress_image(input_path, output_path, target_kb):
     quality = 95  # Start high, reduce until target met
 
     while True:
+        print(output_path)
         img.save(output_path, "JPEG", quality=quality)
         size_kb = os.path.getsize(output_path) / 1024
         if size_kb <= target_kb or quality <= 5:
@@ -16,12 +17,17 @@ def compress_image(input_path, output_path, target_kb):
     print(f"Compressed {input_path} → {size_kb:.1f} KB")
 
 
-target_size_kb = 490
+path = input("Enter path of the Jpg file:- ")
+jpg_filename = input("Enter jpg file name:- ")
+target_size_kb = int(input("Enter target size in kbs:- "))
 
-path=r'H:\My Drive\Business\Vidya Saarthi\Forms Automation\Haryana NEET UG Form\Suhani'
-compressed_folder = "\compressed_images"
-os.makedirs(path + compressed_folder, exist_ok=True)
-file='Photo.jpeg'
+# path=r"C:\Users\Shubham Aggarwal\Downloads"
+# jpg_filename = r"\Wisdom Reasoning Olympiad  OMR Sheet (1)_page_3.jpg"
+# target_size_kb = 290
 
-compressed_path = os.path.join(compressed_folder, os.path.basename(jpg))
-compress_image(jpg, compressed_path, target_size_kb)
+compressed_folder = path + r"\compressed_images"
+os.makedirs(compressed_folder, exist_ok=True)
+
+
+
+compress_image(path + '\\' + jpg_filename , compressed_folder + jpg_filename, target_size_kb)

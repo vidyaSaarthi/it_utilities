@@ -64,10 +64,13 @@ def compress_pdf_fitz(
 
 # Example usage:
 if __name__ == "__main__":
-    input_path = 'H:\My Drive\Business\Vidya Saarthi\IT\compress_pdf_input'
-    output_path = 'H:\My Drive\Business\Vidya Saarthi\IT\compress_pdf_output'
+    input_path = input("Enter path of the pdf file(s):- ")
+    output_path = input_path + '\\compress_pdf_output'
+    os.makedirs(output_path, exist_ok=True)
 
-    target_size = int(input("Enter the Target Size of pdf in Kbs:-"))
+    # jpg_filename = input("Enter jpg file name:- ")
+    target_size = int(input("Enter target size in kbs:- "))
+
 
     for pdf_file in os.listdir(input_path):
         # print(pdf_file,pdf_file[-4:])

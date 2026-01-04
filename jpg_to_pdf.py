@@ -36,10 +36,10 @@ def convert_jpg_to_pdf(jpg_path, pdf_path):
 # 1. Define the input JPG file path
 #    (Make sure you have an image named 'input_image.jpg' in the same directory, 
 #    or provide the full path)
-INPUT_JPG_FILE = 'input_image.jpg'
+INPUT_JPG_FILE = r"C:\Users\Shubham Aggarwal\Downloads\WhatsApp Image 2025-12-25 at 12.31.50 PM.jpeg"
 
 # 2. Define the output PDF file path
-OUTPUT_PDF_FILE = 'output_document.pdf'
+OUTPUT_PDF_FILE = r"C:\Users\Shubham Aggarwal\Downloads\WhatsApp Image 2025-12-25 at 12.31.50 PM.pdf"
 
 # Run the conversion
 convert_jpg_to_pdf(INPUT_JPG_FILE, OUTPUT_PDF_FILE)

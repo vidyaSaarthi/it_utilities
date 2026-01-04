@@ -3,7 +3,7 @@ import random
 iter=0
 while iter <= 25:
     # prints a random value from the list
-    list1 = [4,6,7,8,9,12,13,14,15,16,17]
+    list1 = [2,3,4,5,6,7,8,9]
     num1=random.choice(list1)
 
     # prints a random value from the list
