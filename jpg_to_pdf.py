@@ -1,6 +1,6 @@
 from PIL import Image
 import os
-
+from pdf_to_jpg import working_dir
 
 def convert_jpg_to_pdf(jpg_path, pdf_path):
     """
@@ -10,6 +10,7 @@ def convert_jpg_to_pdf(jpg_path, pdf_path):
         jpg_path (str): The full path to the input JPG file.
         pdf_path (str): The full path for the output PDF file.
     """
+    print(jpg_path,pdf_path)
     try:
         # 1. Open the image using the Pillow library
         image = Image.open(jpg_path)
@@ -31,15 +32,14 @@ def convert_jpg_to_pdf(jpg_path, pdf_path):
         print(f"❌ An error occurred during conversion: {e}")
 
 
-# --- Example Usage ---
+def start_jpg_to_pdf():
+    jpg_path = working_dir
+    INPUT_JPG_FILE = input("Enter JPG/JPEG File Name:- ")
+    INPUT_JPG_FILE_FINAL= jpg_path + "\\" + INPUT_JPG_FILE
 
-# 1. Define the input JPG file path
-#    (Make sure you have an image named 'input_image.jpg' in the same directory, 
-#    or provide the full path)
-INPUT_JPG_FILE = r"C:\Users\Shubham Aggarwal\Downloads\WhatsApp Image 2025-12-25 at 12.31.50 PM.jpeg"
+    # 2. Define the output PDF file path
+    OUTPUT_PDF_FILE_PATH = jpg_path + "\\jpg_to_pdf"
+    os.makedirs(OUTPUT_PDF_FILE_PATH, exist_ok=True)
 
-# 2. Define the output PDF file path
-OUTPUT_PDF_FILE = r"C:\Users\Shubham Aggarwal\Downloads\WhatsApp Image 2025-12-25 at 12.31.50 PM.pdf"
-
-# Run the conversion
-convert_jpg_to_pdf(INPUT_JPG_FILE, OUTPUT_PDF_FILE)
+    # Run the conversion
+    convert_jpg_to_pdf(INPUT_JPG_FILE_FINAL, OUTPUT_PDF_FILE_PATH + "\\" + INPUT_JPG_FILE)

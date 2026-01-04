@@ -3,7 +3,7 @@ import os.path  # Python's standard path module
 import glob
 import os
 
-
+working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
 def pdf_to_jpg_corrected(pdf_path, output_dir=".", zoom_x=2.0, zoom_y=2.0, rotation=0):
     """
     Converts each page of a PDF file to a separate JPG image using os.path
@@ -49,23 +49,25 @@ def pdf_to_jpg_corrected(pdf_path, output_dir=".", zoom_x=2.0, zoom_y=2.0, rotat
     except Exception as e:
         print(f"An unexpected error occurred during conversion: {e}")
 
+def start_pdf_to_jpg():
+    # Replace 'input.pdf' with the actual path to your PDF file.
+    # Make sure the PDF file exists in the same directory, or provide a full path.
+    user_input = input("Enter your options:-\n1 - Single Pdf\n2 - All pdfs In A Directory\n")
 
-# Replace 'input.pdf' with the actual path to your PDF file.
-# Make sure the PDF file exists in the same directory, or provide a full path.
-user_input = input("Enter your options:-\n1 - Single Pdf\n2 - All pdfs In A Directory\n")
+    if int(user_input) == 1:
+        pdf_path = working_dir
+        pdf_name = input("Enter pdf File Name:- ")
 
-if int(user_input) == 1:
-    pdf_path = input("Enter pdf Path:- ")
-    pdf_name = input("Enter pdf File Name:- ")
+        input_pdf_file = pdf_path + '\\' + pdf_name
+        output_jpg_path = os.getcwd() + "\\jpg_to_pdf"
+        os.makedirs(output_jpg_path, exist_ok=True)
 
-    input_pdf_file = pdf_path + '\\' + pdf_name
-    output_jpg_path = pdf_path
+        pdf_to_jpg_corrected(input_pdf_file, output_dir = output_jpg_path)
 
-    pdf_to_jpg_corrected(input_pdf_file, output_dir = output_jpg_path)
+    elif int(user_input) == 2:
+        pdf_path = os.getcwd()
+        pdf_files = glob.glob(os.path.join(pdf_path, "*.pdf"))
+        output_jpg_path = os.getcwd() + "\\jpg_to_pdf"
 
-elif int(user_input) == 2:
-    pdf_path = input("Enter pdfs Path:- ")
-    pdf_files = glob.glob(os.path.join(pdf_path, "*.pdf"))
-
-    for each_pdf_file in pdf_files:
-        pdf_to_jpg_corrected(each_pdf_file, output_dir=pdf_path)
+        for each_pdf_file in pdf_files:
+            pdf_to_jpg_corrected(each_pdf_file, output_dir=output_jpg_path)
