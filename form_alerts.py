@@ -11,11 +11,11 @@ def send_telegram(grp, token_str, msg):
         bot = telegram.Bot(token=token_str)
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         asyncio.run(bot.send_message(chat_id=telegram_group_id, text=telegram_msg, parse_mode='HTML'))
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 # --- CONFIGURATION ---
-FILE_PATH = r"C:\Users\Shubham Aggarwal\Downloads\Forms Schedule.xlsx"  # Replace with your actual file name
+FILE_PATH = r"Forms Schedule.xlsx"  # Replace with your actual file name
 SHEET_NAME = 'Sheet1'  # Replace with your actual sheet name
 
 
@@ -126,11 +126,13 @@ def generate_alerts(df):
     daily_live_alerts = {}
     ending_soon_alerts = {}
     starting_soon_alerts = {}
+    all_activities_schedule = {}
 
     print(f"--- Generating Alerts for {now.strftime(date_fmt)} ---\n")
 
     for index, row in df.iterrows():
         stream = row['Stream']
+        form_name = row['Form Name']
         activity = row['Form Activities']
         start_dt = row['Start_Datetime']
         end_dt = row['End_Datetime']
@@ -146,7 +148,7 @@ def generate_alerts(df):
             if pd.isna(row['End Date']):
                 note = " (Open all month)"
 
-            msg = f"{activity}{note} \n         <b>Ends:</b> {end_str}\n"
+            msg = f"{form_name} - {activity}{note} \n         <b>Ends:</b> {end_str}\n"
             # Store tuple: (Sort_Key, Message) -> Sort by End Date
             daily_live_alerts[stream].append((end_dt, msg))
 
@@ -163,7 +165,7 @@ def generate_alerts(df):
 
         if deadline_msg:
             if stream not in ending_soon_alerts: ending_soon_alerts[stream] = []
-            msg = f"{activity} - {deadline_msg} ({end_str})"
+            msg = f"{form_name} - {activity} - {deadline_msg} ({end_str})"
             # Store tuple: (Sort_Key, Message) -> Sort by End Date
             ending_soon_alerts[stream].append((end_dt, msg))
 
@@ -171,9 +173,20 @@ def generate_alerts(df):
         time_until_start = start_dt - now
         if timedelta(hours=0) < time_until_start <= timedelta(hours=24):
             if stream not in starting_soon_alerts: starting_soon_alerts[stream] = []
-            msg = f"{activity} starts at {start_str}"
+            msg = f"{form_name} - {activity} starts at {start_str}"
             # Store tuple: (Sort_Key, Message) -> Sort by START Date
             starting_soon_alerts[stream].append((start_dt, msg))
+
+        # --- ALERT 4: All form shedules
+        if stream not in all_activities_schedule:
+            all_activities_schedule[stream] = {}
+
+        if form_name not in all_activities_schedule[stream]:
+            all_activities_schedule[stream][form_name] = []
+
+            # Store tuple: (Start Date Object, Activity Name, Start String, End String)
+        all_activities_schedule[stream][form_name].append((start_dt, activity, start_str, end_str))
+        # print(all_activities_schedule)
 
     # --- HELPER TO PRINT SORTED LISTS ---
     def print_category(title, alert_dict):
@@ -213,13 +226,56 @@ def generate_alerts(df):
         telegram_msg = telegram_msg + "\n"
         send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', telegram_msg)
 
+    def send_full_schedule_report(title, data_dict):
+
+        msg= "==========================================\n"
+        msg = msg + title
+        msg = msg + "\n=========================================="
+
+        if not data_dict: return
+        emoji = ''
+        # This message can get long, so we might want to start fresh
+        # msg = msg + f"<b>{emoji} {title}</b>\n"
+
+        # 1. Sort Streams Alphabetically
+        for stream in sorted(data_dict.keys()):
+            msg = f"\n<b>Stream: {stream}</b>\n"
+
+            # 2. Sort Form Names Alphabetically
+            forms = data_dict[stream]
+            for form_name in sorted(forms.keys()):
+                msg += f"\n🔹<b>{form_name}</b>\n"
+
+                # 3. Sort Activities by Start Date (Ascending)
+                activities = forms[form_name]
+                activities.sort(key=lambda x: x[0])
+
+                for start_dt, act_name, s_str, e_str in activities:
+                    # Determine status icon
+                    icon = "🔘"
+                    if start_dt > now:
+                        icon = "🔜"  # Future
+                    elif start_dt <= now and (start_dt + timedelta(days=365 * 10)) > now:
+                        icon = "🟢"  # Active (approx logic)
+
+                    msg += f"   👉 <b>Activity -</b>{act_name}\n          <b>Start:</b> {s_str}\n          <b>End:</b>   {e_str}\n\n"
+
+        # send_telegram_message(msg)
+            print(msg)
+            send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', msg)
+        # print(f"Sent: {title}")
+
+
     # --- PRINTING THE REPORT ---
 
-    print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
+    # print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
+    #
+    # print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
+    #                ending_soon_alerts)
+    # print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
+    #
+    send_full_schedule_report("<b>🟢 ALL FORM SCHEDULES</b>", all_activities_schedule)
 
-    print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
-                   ending_soon_alerts)
-    print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
 
 
 # --- MAIN EXECUTION ---
