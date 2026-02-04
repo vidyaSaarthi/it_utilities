@@ -157,7 +157,7 @@ def generate_alerts(df):
         deadline_msg = None
 
         if timedelta(hours=0) < time_remaining <= timedelta(hours=24):
-            deadline_msg = "Ends in < 24 Hours"
+            deadline_msg = "Ends in &lt; 24 Hours"
         elif timedelta(days=2) < time_remaining <= timedelta(days=3):
             deadline_msg = "Ends in 3 Days"
         elif timedelta(days=6) < time_remaining <= timedelta(days=7):
@@ -268,11 +268,11 @@ def generate_alerts(df):
 
     # --- PRINTING THE REPORT ---
 
-    # print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
-    #
-    # print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
-    #                ending_soon_alerts)
-    # print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
+    print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
+
+    print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
+                   ending_soon_alerts)
+    print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
     #
     send_full_schedule_report("<b>🟢 ALL FORM SCHEDULES</b>", all_activities_schedule)
 
