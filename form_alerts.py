@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 import calendar
 import asyncio, telegram
 from telegram.constants import ParseMode
+import matplotlib.pyplot as plt
+from pandas.plotting import table
+import os
 
 def send_telegram(grp, token_str, msg):
     try:
@@ -226,7 +229,7 @@ def generate_alerts(df):
         telegram_msg = telegram_msg + "\n"
         send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', telegram_msg)
 
-    def send_full_schedule_report(title, data_dict):
+    def send_full_schedule_report_prev(title, data_dict):
 
         msg= "==========================================\n"
         msg = msg + title
@@ -265,17 +268,103 @@ def generate_alerts(df):
             send_telegram('@VS_Notices', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', msg)
         # print(f"Sent: {title}")
 
+    def send_full_schedule_report(title, data_dict):
 
-    # --- PRINTING THE REPORT ---
+        emoji=''
+        if not data_dict: return
 
-    print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
+        print("Generating Stream-wise Schedule Images...")
 
-    print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
-                   ending_soon_alerts)
-    print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
+        # Loop through each stream separately
+        for stream in sorted(data_dict.keys()):
+            print(f"  > Processing Stream: {stream}")
+
+            table_data = []
+            # We removed 'Stream' column since the file is specific to one stream
+            columns = ["Form Name", "Activity", "Start Date", "End Date"]
+
+            forms = data_dict[stream]
+            for form_name in sorted(forms.keys()):
+                activities = forms[form_name]
+                activities.sort(key=lambda x: x[0])
+
+                for start_dt, act_name, s_str, e_str in activities:
+                    s_date_only = s_str[:11]
+                    e_date_only = e_str[:11]
+                    table_data.append([form_name, act_name, s_date_only, e_date_only])
+
+            if not table_data:
+                continue
+
+            # --- Create DataFrame for this specific stream ---
+            df_table = pd.DataFrame(table_data, columns=columns)
+
+            # --- Plotting ---
+            num_rows = len(df_table)
+            img_height = max(4, num_rows * 0.4 + 1.5)
+
+            fig, ax = plt.subplots(figsize=(12, img_height))
+            ax.axis('off')
+
+            # Note: colWidths adjusted since we have 4 columns now instead of 5
+            tbl = ax.table(cellText=df_table.values,
+                           colLabels=df_table.columns,
+                           loc='center',
+                           cellLoc='left',
+                           colWidths=[0.30, 0.40, 0.15, 0.15])
+
+            # --- Styling ---
+            tbl.auto_set_font_size(False)
+            tbl.set_fontsize(11)
+            tbl.scale(1.1, 2)
+
+            for (row, col), cell in tbl.get_celld().items():
+                if row == 0:
+                    cell.set_text_props(weight='bold', color='white')
+                    cell.set_facecolor('#40466e')
+                else:
+                    if row % 2 == 0: cell.set_facecolor('#f5f5f5')
+                    # Now Column 0 is Form Name, so bold that
+                    if col == 0: cell.set_text_props(weight='bold')
+
+            # Dynamic Title based on Stream Name
+            current_date = datetime.now().strftime('%d-%b-%Y')
+            plt.title(f"{emoji} {stream} Forms Schedule (As of {current_date})",
+                      fontsize=16, weight='bold', pad=30, y=1.02)
+
+            # --- Save & Send Unique File ---
+            # Sanitize filename (remove spaces or special chars)
+            safe_stream_name = "".join([c for c in stream if c.isalnum() or c in (' ', '_')]).strip().replace(" ", "_")
+            image_filename = f"Schedule_{safe_stream_name}.jpg"
+
+            plt.savefig(image_filename, bbox_inches='tight', dpi=150)
+            plt.close()
+
+            print(f"    Saved: {image_filename}")
+            # send_telegram_photo(image_filename, f"{emoji} {stream} Schedule for WhatsApp")    # --- PRINTING THE REPORT ---
+
+    # print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
     #
-    send_full_schedule_report("<b>🟢 ALL FORM SCHEDULES</b>", all_activities_schedule)
+    # print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
+    #                ending_soon_alerts)
+    # print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
+    #
+    # send_full_schedule_report("<b>🟢 ALL FORM SCHEDULES</b>", all_activities_schedule)
+    send_full_schedule_report("ALL FORM SCHEDULES", all_activities_schedule)
 
+
+# def send_telegram_photo(file_path, caption):
+#     """Sends an image file to Telegram."""
+#     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
+#     try:
+#         with open(file_path, 'rb') as photo:
+#             payload = {'chat_id': CHAT_ID, 'caption': caption}
+#             files = {'photo': photo}
+#             response = requests.post(url, data=payload, files=files)
+#             if response.status_code != 200:
+#                 print(f"Failed to send photo: {response.text}")
+#     except Exception as e:
+#         print(f"Error sending photo: {e}")
 
 
 # --- MAIN EXECUTION ---
