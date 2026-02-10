@@ -3,7 +3,7 @@ import pandas as pd
 
 # Input/output file paths
 location  = r"C:\Users\Shubham Aggarwal\Downloads\\"
-pdf_file_only_name='Open Round Seat Position'
+pdf_file_only_name='Seat Matrix UP NEET MD MS'
 pdf_path = location + pdf_file_only_name + ".pdf"
 excel_path = location + pdf_file_only_name + '.csv'
 

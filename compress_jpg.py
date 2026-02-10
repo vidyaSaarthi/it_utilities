@@ -34,6 +34,7 @@ def compress_image(input_path, output_path, target_kb):
             img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
             # Reset quality slightly to avoid getting stuck at low quality + small size
             quality = 60
+
             print("Reducing Resize factor")
             resize_factor = resize_factor - 0.1
 

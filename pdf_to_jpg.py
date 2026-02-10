@@ -71,3 +71,5 @@ def start_pdf_to_jpg():
 
         for each_pdf_file in pdf_files:
             pdf_to_jpg_corrected(each_pdf_file, output_dir=output_jpg_path)
+
+start_pdf_to_jpg()

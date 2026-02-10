@@ -1,7 +1,8 @@
 import fitz  # PyMuPDF
 import os
 from io import BytesIO
-from pdf_to_jpg import working_dir
+
+working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
 
 
 def compress_pdf_fitz(
@@ -65,34 +66,31 @@ def compress_pdf_fitz(
 
 
 # Example usage:
-def start_compress_pdf():
-    input_path = working_dir
-    pdf_filename = input("Enter pdf file name:- ")
-    output_path = input_path + '\\compressed_pdf'
-    os.makedirs(output_path, exist_ok=True)
+# def start_compress_pdf():
+input_path = working_dir
+pdf_filename = input("Enter pdf file name:- ")
+output_path = input_path + '\\compressed_pdf'
+os.makedirs(output_path, exist_ok=True)
 
-    target_size = int(input("Enter target size in kbs:- "))
+target_size = int(input("Enter target size in kbs:- "))
 
 
-    # for pdf_file in os.listdir(input_path):
-    #     # print(pdf_file,pdf_file[-4:])
-    #     if pdf_file != 'compress_pdf.bat' and pdf_file[-4:] == '.pdf':
-    #         file_name = os.path.splitext(os.path.basename(pdf_file))[0]
+# for pdf_file in os.listdir(input_path):
+#     # print(pdf_file,pdf_file[-4:])
+#     if pdf_file != 'compress_pdf.bat' and pdf_file[-4:] == '.pdf':
+#         file_name = os.path.splitext(os.path.basename(pdf_file))[0]
 
-    input_file_name = input_path + "\\" + pdf_filename
-    output_file_name = output_path + "\\" + pdf_filename
+input_file_name = input_path + "\\" + pdf_filename
+output_file_name = output_path + "\\" + pdf_filename
 
-    print(input_file_name, output_file_name)
+print(input_file_name, output_file_name)
 
-    compress_pdf_fitz(
-        input_path=input_file_name,
-        output_path=output_file_name,
-        target_size_kb=target_size,
-        initial_dpi=200,
-        min_dpi=50,
-        initial_jpg_quality=95,
-        min_jpg_quality=20,
-    )
-
-    # os.remove(input_file_name)
-
+compress_pdf_fitz(
+    input_path=input_file_name,
+    output_path=output_file_name,
+    target_size_kb=target_size,
+    initial_dpi=200,
+    min_dpi=50,
+    initial_jpg_quality=95,
+    min_jpg_quality=20,
+)
