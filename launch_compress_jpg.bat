@@ -1,2 +1,1 @@
 "C:\Users\Shubham Aggarwal\PycharmProjects\it_utilities\venv\Scripts\python.exe" .\compress_jpg.py
-pause
