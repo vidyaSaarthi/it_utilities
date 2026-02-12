@@ -17,6 +17,19 @@ def send_telegram(grp, token_str, msg):
     except Exception as e:
         print(e)
 
+def send_telegram_photo(file_path, caption):
+    """Sends an image file to Telegram."""
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
+    try:
+        with open(file_path, 'rb') as photo:
+            payload = {'chat_id': CHAT_ID, 'caption': caption}
+            files = {'photo': photo}
+            response = requests.post(url, data=payload, files=files)
+            if response.status_code != 200:
+                print(f"Failed to send photo: {response.text}")
+    except Exception as e:
+        print(f"Error sending photo: {e}")
+
 # --- CONFIGURATION ---
 FILE_PATH = r"Forms Schedule.xlsx"  # Replace with your actual file name
 SHEET_NAME = 'Sheet1'  # Replace with your actual sheet name
@@ -343,11 +356,11 @@ def generate_alerts(df):
             print(f"    Saved: {image_filename}")
             # send_telegram_photo(image_filename, f"{emoji} {stream} Schedule for WhatsApp")    # --- PRINTING THE REPORT ---
 
-    # print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
-    #
-    # print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
-    #                ending_soon_alerts)
-    # print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
+    print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
+
+    print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
+                   ending_soon_alerts)
+    print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
     #
     # send_full_schedule_report("<b>🟢 ALL FORM SCHEDULES</b>", all_activities_schedule)
     send_full_schedule_report("ALL FORM SCHEDULES", all_activities_schedule)

@@ -1,7 +1,8 @@
 import time
 from PIL import Image
 import os
-from pdf_to_jpg import working_dir
+
+working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
 def compress_image(input_path, output_path, target_kb):
     img = Image.open(input_path)
     quality = 95  # Start high, reduce until target met
@@ -50,3 +51,5 @@ def start_compress_jpg():
     os.makedirs(compressed_folder, exist_ok=True)
 
     compress_image(path + '\\' + jpg_filename , compressed_folder + jpg_filename, target_size_kb)
+
+start_compress_jpg()
