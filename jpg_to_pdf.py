@@ -1,6 +1,7 @@
 from PIL import Image
 import os
-from pdf_to_jpg import working_dir
+# from pdf_to_jpg import working_dir
+working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
 
 def convert_jpg_to_pdf(jpg_path, pdf_path):
     """
@@ -42,4 +43,6 @@ def start_jpg_to_pdf():
     os.makedirs(OUTPUT_PDF_FILE_PATH, exist_ok=True)
 
     # Run the conversion
-    convert_jpg_to_pdf(INPUT_JPG_FILE_FINAL, OUTPUT_PDF_FILE_PATH + "\\" + INPUT_JPG_FILE)
+    convert_jpg_to_pdf(INPUT_JPG_FILE_FINAL, OUTPUT_PDF_FILE_PATH + "\\" + INPUT_JPG_FILE.split(".")[0] + ".pdf")
+
+start_jpg_to_pdf()

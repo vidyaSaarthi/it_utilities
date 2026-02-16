@@ -3,7 +3,7 @@ import os.path  # Python's standard path module
 import glob
 import os
 
-working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
+working_dir =  os.path.expanduser("~")
 def pdf_to_jpg_corrected(pdf_path, output_dir=".", zoom_x=2.0, zoom_y=2.0, rotation=0):
     """
     Converts each page of a PDF file to a separate JPG image using os.path
@@ -59,7 +59,7 @@ def start_pdf_to_jpg():
         pdf_name = input("Enter pdf File Name:- ")
 
         input_pdf_file = pdf_path + '\\' + pdf_name
-        output_jpg_path = os.getcwd() + "\\jpg_to_pdf"
+        output_jpg_path = os.getcwd() + "\\pdf_to_jpg"
         os.makedirs(output_jpg_path, exist_ok=True)
 
         pdf_to_jpg_corrected(input_pdf_file, output_dir = output_jpg_path)
@@ -67,7 +67,7 @@ def start_pdf_to_jpg():
     elif int(user_input) == 2:
         pdf_path = os.getcwd()
         pdf_files = glob.glob(os.path.join(pdf_path, "*.pdf"))
-        output_jpg_path = os.getcwd() + "\\jpg_to_pdf"
+        output_jpg_path = os.getcwd() + "\\pdf_to_jpg"
 
         for each_pdf_file in pdf_files:
             pdf_to_jpg_corrected(each_pdf_file, output_dir=output_jpg_path)
