@@ -1,5 +1,5 @@
 from pdf_to_jpg import start_pdf_to_jpg
-from jpg_to_pdf import start_jpg_to_pdf
+from jpg_to_pdf import start_jpg_to_pdf_multi
 from compress_jpg import start_compress_jpg
 from compress_pdf import start_compress_pdf
 def main_menu():
@@ -18,7 +18,7 @@ def main_menu():
         if choice == '1':
             start_pdf_to_jpg()
         elif choice == '2':
-            start_jpg_to_pdf()
+            start_jpg_to_pdf_multi()
         elif choice == '3':
             start_compress_jpg()
         elif choice == '4':

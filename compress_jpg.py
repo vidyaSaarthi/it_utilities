@@ -52,4 +52,5 @@ def start_compress_jpg():
 
     compress_image(path + '\\' + jpg_filename , compressed_folder + jpg_filename, target_size_kb)
 
-start_compress_jpg()
+if __name__ == "__main__":
+    start_compress_jpg()
