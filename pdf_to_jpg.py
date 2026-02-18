@@ -3,7 +3,7 @@ import os.path  # Python's standard path module
 import glob
 import os
 
-working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
+working_dir = os.path.expanduser("~")
 def pdf_to_jpg_corrected(pdf_path, output_dir=".", zoom_x=2.0, zoom_y=2.0, rotation=0):
     """
     Converts each page of a PDF file to a separate JPG image using os.path

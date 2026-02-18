@@ -2,7 +2,7 @@ import fitz  # PyMuPDF
 import os
 from io import BytesIO
 
-working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
+working_dir = os.path.expanduser("~")
 
 
 def compress_pdf_fitz(

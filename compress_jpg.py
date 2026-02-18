@@ -2,7 +2,7 @@ import time
 from PIL import Image
 import os
 
-working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
+working_dir = os.path.expanduser("~")
 def compress_image(input_path, output_path, target_kb):
     img = Image.open(input_path)
     quality = 95  # Start high, reduce until target met

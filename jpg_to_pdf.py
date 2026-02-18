@@ -51,8 +51,7 @@ from PIL import Image
 import os
 
 # Updated working directory
-working_dir = r"H:\My Drive\Business\Vidya Saarthi\IT\utilities"
-
+working_dir = os.path.expanduser("~")
 
 def convert_multiple_jpgs_to_pdf(jpg_paths, output_pdf_path):
     """
