@@ -2,10 +2,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 import calendar
 import asyncio, telegram
-from telegram.constants import ParseMode
 import matplotlib.pyplot as plt
-from pandas.plotting import table
-import os
+import requests
 
 def send_telegram(grp, token_str, msg):
     try:
@@ -17,12 +15,12 @@ def send_telegram(grp, token_str, msg):
     except Exception as e:
         print(e)
 
-def send_telegram_photo(file_path, caption):
+def send_telegram_photo(file_path, caption, BOT_TOKEN, grp):
     """Sends an image file to Telegram."""
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
     try:
         with open(file_path, 'rb') as photo:
-            payload = {'chat_id': CHAT_ID, 'caption': caption}
+            payload = {'chat_id': grp, 'caption': caption}
             files = {'photo': photo}
             response = requests.post(url, data=payload, files=files)
             if response.status_code != 200:
@@ -288,6 +286,13 @@ def generate_alerts(df):
 
         print("Generating Stream-wise Schedule Images...")
 
+        # --- CONFIGURATION: EDIT YOUR CONTACT INFO HERE ---
+        WATERMARK_TXT = "VidyaSaarthi"
+        WATERMARK_CONTACT = "    Contact: +91-8600164008, +91 90343 75324"
+
+        # NEW: Fix the gap to exactly 1.0 inch regardless of image height
+        FIXED_GAP_INCHES = 1.0
+
         # Loop through each stream separately
         for stream in sorted(data_dict.keys()):
             print(f"  > Processing Stream: {stream}")
@@ -345,6 +350,29 @@ def generate_alerts(df):
             plt.title(f"{emoji} {stream} Forms Schedule (As of {current_date})",
                       fontsize=16, weight='bold', pad=30, y=1.02)
 
+            # ==========================================
+            #  CONSISTENT WATERMARK LOGIC
+            # ==========================================
+            # 1. Main Text (Always exact center)
+            main_y = 0.5
+
+            # 2. Contact Detail (Calculated fixed offset)
+            # We convert the desired inch gap into a relative figure coordinate
+            gap_adjustment = FIXED_GAP_INCHES / img_height
+            contact_y = main_y - gap_adjustment
+
+            fig.text(0.5, main_y, WATERMARK_TXT,
+                     fontsize=80, color='red',
+                     ha='center', va='center',
+                     alpha=0.10,
+                     rotation=30, weight='bold')
+
+            fig.text(0.5, contact_y, WATERMARK_CONTACT,
+                     fontsize=20, color='red',
+                     ha='center', va='center',
+                     alpha=0.30, rotation=30)
+            # ==========================================
+
             # --- Save & Send Unique File ---
             # Sanitize filename (remove spaces or special chars)
             safe_stream_name = "".join([c for c in stream if c.isalnum() or c in (' ', '_')]).strip().replace(" ", "_")
@@ -354,14 +382,14 @@ def generate_alerts(df):
             plt.close()
 
             print(f"    Saved: {image_filename}")
-            # send_telegram_photo(image_filename, f"{emoji} {stream} Schedule for WhatsApp")    # --- PRINTING THE REPORT ---
+            send_telegram_photo(image_filename, f"{emoji} {stream} Forms Schedule", '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14','@VS_Notices')    # --- PRINTING THE REPORT ---
 
     print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
 
     print_category("<b>🟢 DEADLINE ALERTS (Ends in 1 Week, 3 Days, or 24 Hrs)</b>",
                    ending_soon_alerts)
     print_category("<b>🟢 UPCOMING STARTS (Next 24 Hrs)</b>", starting_soon_alerts)
-    #
+
     # send_full_schedule_report("<b>🟢 ALL FORM SCHEDULES</b>", all_activities_schedule)
     send_full_schedule_report("ALL FORM SCHEDULES", all_activities_schedule)
 
