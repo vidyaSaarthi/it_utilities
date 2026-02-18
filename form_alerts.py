@@ -217,7 +217,7 @@ def generate_alerts(df):
         if not alert_dict:
             print("No alerts found.")
             telegram_msg = telegram_msg + "\nNo alerts found.\n"
-            send_telegram('@VSNEETUGTEST', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', telegram_msg)
+            send_telegram('@VSNEETUGTEST', '8526202388:AAG5bD6MSaHBh1Fzk042J5cYYmcC-PwgD84', telegram_msg)
             return
 
         # Sort Streams Alphabetically first
@@ -238,7 +238,7 @@ def generate_alerts(df):
                 telegram_msg = telegram_msg + f"   🔹 {message}\n"
         print("\n")
         telegram_msg = telegram_msg + "\n"
-        send_telegram('@VSNEETUGTEST', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', telegram_msg)
+        send_telegram('@VSNEETUGTEST', '8526202388:AAG5bD6MSaHBh1Fzk042J5cYYmcC-PwgD84', telegram_msg)
 
     def send_full_schedule_report_prev(title, data_dict):
 
@@ -276,7 +276,7 @@ def generate_alerts(df):
 
         # send_telegram_message(msg)
             print(msg)
-            send_telegram('@VSNEETUGTEST', '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14', msg)
+            send_telegram('@VSNEETUGTEST', '8526202388:AAG5bD6MSaHBh1Fzk042J5cYYmcC-PwgD84', msg)
         # print(f"Sent: {title}")
 
     def send_full_schedule_report(title, data_dict):
@@ -382,7 +382,7 @@ def generate_alerts(df):
             plt.close()
 
             print(f"    Saved: {image_filename}")
-            send_telegram_photo(image_filename, f"{emoji} {stream} Forms Schedule", '7873667251:AAFoZVUhEM5cbLsvCTrpuJ6BxJy-WmvWY14','@VSNEETUGTEST')    # --- PRINTING THE REPORT ---
+            send_telegram_photo(image_filename, f"{emoji} {stream} Forms Schedule", '8526202388:AAG5bD6MSaHBh1Fzk042J5cYYmcC-PwgD84','@VSNEETUGTEST')    # --- PRINTING THE REPORT ---
 
     print_category("<b>🟢 DAILY LIVE FORM ACTIVITIES (OPEN NOW)</b>", daily_live_alerts)
 
