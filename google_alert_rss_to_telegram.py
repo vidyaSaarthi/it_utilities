@@ -31,7 +31,9 @@ RSS_TO_GROUP = {
     "https://www.google.com/alerts/feeds/06660699284050266053/15015340571517855658" : "@vs_whatsapp_api_alerts", #HSTES
     "https://www.google.com/alerts/feeds/06660699284050266053/15482280052394751531" : "@vs_whatsapp_api_alerts", #JAC Chandigarh
     "https://www.google.com/alerts/feeds/06660699284050266053/15482280052394752618" : "@vs_whatsapp_api_alerts", #SRMJEE
+
     "https://timesofindia.indiatimes.com/rssfeedmostrecent.cms" : "@news_update_sa", #TOI News
+
     "https://openai.com/news/rss.xml" : "@ai_news_sa",
     "https://ai.googleblog.com/feeds/posts/default" : "@ai_news_sa",
     "https://deepmind.com/blog/feed/basic/" : "@ai_news_sa",
