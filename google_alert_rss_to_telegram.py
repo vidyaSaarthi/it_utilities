@@ -3,12 +3,23 @@ import requests
 import pickle
 import os
 import time
+from urllib.parse import urlparse, parse_qs
 
 # Telegram Bot Token
 BOT_TOKEN = "8526202388:AAG5bD6MSaHBh1Fzk042J5cYYmcC-PwgD84"
 CHAT_ID = "@vs_whatsapp_api_alerts"  # Group IDs usually start with a minus sign (-)
 CHAT_ID_NEWS = "@news_update_sa"
 new_data_found = False
+
+def clean_google_url(url):
+    # Check if it's a google redirect link
+    if "google.com/url" in url:
+        parsed_url = urlparse(url)
+        # Extract the 'url' parameter from the query string
+        captured_url = parse_qs(parsed_url.query).get('url')
+        if captured_url:
+            return captured_url[0] # Return the actual destination
+
 
 RSS_TO_GROUP = {
     "https://www.google.co.in/alerts/feeds/06660699284050266053/9479878068789660271" : "@vs_whatsapp_api_alerts", #BITSAT
@@ -100,7 +111,9 @@ def check_alerts():
             unique_id = entry.get("id", entry.get("link"))
 
             if unique_id not in seen_entries:
-                message = f"<b>{entry.title}</b>\n<a href='{entry.link}'>Read more</a>"
+                final_link = clean_google_url(entry.link)
+
+                message = f"<b>{entry.title}</b>\n<a href='{final_link}'>Read more</a>"
                 send_telegram_msg(chat_id, message)
 
                 seen_entries.add(unique_id)
