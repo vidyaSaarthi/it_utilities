@@ -43,25 +43,25 @@ RSS_TO_GROUP = {
     "https://www.google.com/alerts/feeds/06660699284050266053/15482280052394751531" : "@vs_whatsapp_api_alerts", #JAC Chandigarh
     "https://www.google.com/alerts/feeds/06660699284050266053/15482280052394752618" : "@vs_whatsapp_api_alerts", #SRMJEE
 
-    "https://timesofindia.indiatimes.com/rssfeedmostrecent.cms" : "@news_update_sa", #TOI News
+    # "https://timesofindia.indiatimes.com/rssfeedmostrecent.cms" : "@news_update_sa", #TOI News
 
-    "https://openai.com/news/rss.xml" : "@ai_news_sa",
-    "https://ai.googleblog.com/feeds/posts/default" : "@ai_news_sa",
-    "https://deepmind.com/blog/feed/basic/" : "@ai_news_sa",
-    "https://blogs.nvidia.com/blog/category/ai/feed/" : "@ai_news_sa",
-    "https://huggingface.co/blog/feed.xml" : "@ai_news_sa",
-    "https://www.technologyreview.com/topic/artificial-intelligence/feed/" : "@ai_news_sa",
-    "https://www.aitrends.com/feed/" : "@ai_news_sa",
-    "https://www.marktechpost.com/feed/" : "@ai_news_sa",
-    "https://aiweekly.co/feed" : "@ai_news_sa",
-    "https://theaireport.com/feed/" : "@ai_news_sa",
-    "https://rss.arxiv.org/rss/cs.AI" : "@ai_news_sa",
-    "https://distill.pub/rss.xml" : "@ai_news_sa",
-    "https://thegradient.pub/rss/" : "@ai_news_sa",
-    "https://bair.berkeley.edu/blog/feed.xml" : "@ai_news_sa",
-    "https://www.analyticsvidhya.com/feed/" : "@ai_news_sa",
-    "https://www.datasciencecentral.com/main/feed/" : "@ai_news_sa",
-    "https://www.predictiveanalyticsworld.com/machinelearningtimes/feed/" : "@ai_news_sa"
+    # "https://openai.com/news/rss.xml" : "@ai_news_sa",
+    # "https://ai.googleblog.com/feeds/posts/default" : "@ai_news_sa",
+    # "https://deepmind.com/blog/feed/basic/" : "@ai_news_sa",
+    # "https://blogs.nvidia.com/blog/category/ai/feed/" : "@ai_news_sa",
+    # "https://huggingface.co/blog/feed.xml" : "@ai_news_sa",
+    # "https://www.technologyreview.com/topic/artificial-intelligence/feed/" : "@ai_news_sa",
+    # "https://www.aitrends.com/feed/" : "@ai_news_sa",
+    # "https://www.marktechpost.com/feed/" : "@ai_news_sa",
+    # "https://aiweekly.co/feed" : "@ai_news_sa",
+    # "https://theaireport.com/feed/" : "@ai_news_sa",
+    # "https://rss.arxiv.org/rss/cs.AI" : "@ai_news_sa",
+    # "https://distill.pub/rss.xml" : "@ai_news_sa",
+    # "https://thegradient.pub/rss/" : "@ai_news_sa",
+    # "https://bair.berkeley.edu/blog/feed.xml" : "@ai_news_sa",
+    # "https://www.analyticsvidhya.com/feed/" : "@ai_news_sa",
+    # "https://www.datasciencecentral.com/main/feed/" : "@ai_news_sa",
+    # "https://www.predictiveanalyticsworld.com/machinelearningtimes/feed/" : "@ai_news_sa"
 
 }
 
